@@ -1,0 +1,51 @@
+{
+  "globals": {
+    "$": true
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "eslint-config-airbnb-es5",
+    "angular"
+  ],
+  "rules": {
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-console": "off",
+    "one-var": [
+      "off",
+      {
+        "var": "always",
+        "let": "never",
+        "const": "never"
+      }
+    ],
+    "func-names": "off",
+    "spaced-comment": "off",
+    "space-before-function-paren": [
+      "error",
+      "always"
+    ],
+    "consistent-return": "warn",
+    "dot-notation": "warn",
+    "angular/window-service": "warn",
+    "angular/log": "warn",
+    "angular/typecheck-object": "warn",
+    "angular/json-functions": "warn",
+    "angular/timeout-service": "warn",
+    "angular/module-getter": "warn",
+    "angular/on-watch": "warn",
+    "angular/controller-as-vm": "warn",
+    "angular/controller-name": [
+      "off",
+      "/^[A-Z].*/"
+    ]
+  }
+}

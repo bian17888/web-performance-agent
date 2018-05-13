@@ -1,0 +1,17 @@
+[{
+  "name"             : "FE-Components",
+  "cwd"              : "./",
+  "script"           : "./src/server/app.js",
+  "exec_mode"        : "cluster", 
+  "instances"        : 2,
+  "node_args"        : [],
+  "log_date_format"  : "YYYY-MM-DDTHH:mm:ssZ",
+  "error_file"       : "./logs/sandtable.stderr.log",
+  "out_file"         : "./logs/sandtable.stdout.log",
+  "pid_file"         : "./logs/sandtable.pid",
+  "merge_logs"       : true,
+  "max_memory_restart" : "500M",
+  "env": {
+    "NODE_ENV": "product"
+  }
+}]
