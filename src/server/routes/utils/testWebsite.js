@@ -24,14 +24,14 @@ exports.run = async (data) => {
 	const page = await browser.newPage();
 
 	// 初始化设置
-	await page.setViewport({width: 1024, height: 1024});
+	await page.setViewport({width: 1280, height: 800});
 	await page.goto(data.setup.loginSite);
 	// 登录
 	const framework = await page.frames()[1];
 	await framework.type(USERNAME_SELECTOR, data.setup.username);
 	await framework.type(PASSWORD_SELECTOR, data.setup.password);
 	await framework.click(BUTTON_SELECTOR);
-	await page.waitForNavigation();
+	await page.waitForNavigation(0);
 
 	// 执行每个任务
 	for (let url of data.task) {
