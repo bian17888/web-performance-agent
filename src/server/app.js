@@ -6,7 +6,9 @@
  */
 const express = require('express'),
 	app = express(),
-	asyncHandler = require('express-async-handler');
+	asyncHandler = require('express-async-handler'),
+	bodyParser = require('body-parser');
+
 
 const routes = require('./routes');
 
@@ -26,6 +28,8 @@ app.set('appName', 'Agent');
  * 4 定义中间件
  */
 // third library
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 /**
  * 5 定义路由
