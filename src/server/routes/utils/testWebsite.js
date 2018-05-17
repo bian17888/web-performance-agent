@@ -3,10 +3,6 @@
  * @author bian17888 2018/5/13 17:49
  */
 
-const USERNAME_SELECTOR = '#fm-login-id';
-const PASSWORD_SELECTOR = '#fm-login-password';
-const BUTTON_SELECTOR = '#fm-login-submit';
-
 const puppeteer = require('puppeteer');
 
 /**
@@ -21,7 +17,8 @@ exports.run = async (data) => {
 
 	// 初始化设置
 	const browser = await puppeteer.launch({
-		headless: false
+		headless: false,
+		args: ['--no-sandbox', '--disable-setuid-sandbox']
 	});
 
 	// 执行每个任务
