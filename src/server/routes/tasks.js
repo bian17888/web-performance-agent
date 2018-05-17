@@ -10,17 +10,19 @@ const dingApi = require('./utils/dingApi');
  * POST create a new task.
  */
 exports.createTask = async (req, res, next) => {
-	// let data = {
-	// 	"dingTalk" : "https://oapi.dingtalk.com/robot/send?access_token=45e588eabe9c73d335537ec215c1f4dd44e72eb10c5caaedbe5a0a45c15b1b76",
-	// 	"setup": {
-	// 		"username" : "kai17888@sohu.com",
-	// 		"password" : "bK100200",
-	// 		"loginSite": "https://account.aliyun.com/login/login.htm"
-	// 	},
-	// 	"task" : [
-	// 		"https://home.console.aliyun.com/new#/",
-	// 		"https://ecs.console.aliyun.com/?spm=5176.2020520102.aliyun_sidebar.1.5a6b1eb9eQpiL5"
-	// 	]
+	// 入参的数据结构
+	// req.body = {
+	// 	"dingTalk": "",
+	// 	"setup":
+	// 		{
+	// 			"username": "",
+	// 			"password": "",
+	// 			"loginSite": "https://account.aliyun.com/login/login.htm"
+	// 		},
+	// 	"task": [
+	// 		"https://rdsnew.console.aliyun.com/#/rdsList/basic/"
+	// 	],
+	// 	"cookies": []
 	// };
 
 	// test the website

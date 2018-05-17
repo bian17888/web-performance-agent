@@ -17,29 +17,19 @@ const puppeteer = require('puppeteer');
 exports.run = async (data) => {
 	const that = this;
 	let result = [];
+	let cookies = data.cookies || [];
 
+	// 初始化设置
 	const browser = await puppeteer.launch({
 		headless: false
 	});
-	const page = await browser.newPage();
-
-	// 初始化设置
-	await page.setViewport({width: 1280, height: 800});
-	await page.goto(data.setup.loginSite);
-	// 登录
-	const framework = await page.frames()[1];
-	await framework.type(USERNAME_SELECTOR, data.setup.username);
-	await framework.type(PASSWORD_SELECTOR, data.setup.password);
-	await framework.click(BUTTON_SELECTOR);
-	await page.waitForNavigation(0);
 
 	// 执行每个任务
 	for (let url of data.task) {
 		let obj = {};
-		obj[url] = await that.testWebsite(browser, url);
+		obj[url] = await that.testWebsite(browser, url, cookies);
 		result.push(obj);
 	}
-
 	browser.close();
 
 	return result;
@@ -49,12 +39,16 @@ exports.run = async (data) => {
  * page 测试逻辑
  * @param browser
  * @param url
+ * @param cookies
  * @returns {Promise<void>}
  */
-exports.testWebsite = async (browser, url) => {
+exports.testWebsite = async (browser, url, cookies) => {
 	const that = this;
 	const page = await browser.newPage();
-	await page.setViewport({width: 1024, height: 1024});
+
+	// 初始化设置
+	await page.setViewport({width: 1280, height: 800});
+	await page.setCookie(...cookies);
 	await page.goto(url);
 
 	const performanceTiming = JSON.parse(
