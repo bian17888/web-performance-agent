@@ -6,7 +6,6 @@
  */
 const express = require('express'),
 	app = express(),
-	asyncHandler = require('express-async-handler'),
 	bodyParser = require('body-parser');
 
 
