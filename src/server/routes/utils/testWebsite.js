@@ -2,7 +2,8 @@
  * @fileOverview
  * @author bian17888 2018/5/13 17:49
  */
-
+const fs = require('fs');
+const path = require('path');
 const puppeteer = require('puppeteer');
 
 /**
@@ -12,19 +13,22 @@ const puppeteer = require('puppeteer');
  */
 exports.run = async (data) => {
 	const that = this;
+	const time = new Date();
+	let reportFolder = path.join(__dirname, './../../../../report/' + time.getTime());
 	let result = [];
 	let cookies = data.cookies || [];
 
 	// 初始化设置
 	const browser = await puppeteer.launch({
-		headless: true,
-		args: ['--no-sandbox', '--disable-setuid-sandbox']
+		headless: false,
+		args    : ['--no-sandbox', '--disable-setuid-sandbox']
 	});
 
+	fs.mkdirSync(reportFolder);
 	// 执行每个任务
 	for (let url of data.task) {
 		let obj = {};
-		obj[url] = await that.testWebsite(browser, url, cookies);
+		obj[url] = await that.testWebsite(browser, url, cookies, reportFolder);
 		result.push(obj);
 	}
 	browser.close();
@@ -37,16 +41,26 @@ exports.run = async (data) => {
  * @param browser
  * @param url
  * @param cookies
+ * @param reportFolder
  * @returns {Promise<void>}
  */
-exports.testWebsite = async (browser, url, cookies) => {
+exports.testWebsite = async (browser, url, cookies, reportFolder) => {
 	const that = this;
+	const taskFolder = path.join(reportFolder, new Date().getTime().toString());
 	const page = await browser.newPage();
 
 	// 初始化设置
 	await page.setViewport({width: 1280, height: 800});
 	await page.setCookie(...cookies);
-	await page.goto(url);
+
+	// capture filmstrip
+	fs.mkdirSync(taskFolder);
+	await page.tracing.start({path: taskFolder + '/result.json', screenshots: true});
+	await page.goto(url, {waitUntil : 'networkidle0'});
+	await page.tracing.stop();
+
+	// export .png form result.json
+	that.exportFilmstrip(taskFolder);
 
 	const performanceTiming = JSON.parse(
 		await page.evaluate(() => JSON.stringify(window.performance.timing))
@@ -75,4 +89,26 @@ exports.helpers = (timing, ...dataNames) => {
 	});
 
 	return extractedData;
+}
+
+/**
+ * 从json中读取base64图片, 并另存为.png格式
+ * @param timing
+ * @param dataNames
+ */
+exports.exportFilmstrip = (folder) => {
+	const tracing = JSON.parse(fs.readFileSync(folder + '/result.json', 'utf8'));
+	const traceScreenshots = tracing.traceEvents.filter(x => (
+		x.cat === 'disabled-by-default-devtools.screenshot' &&
+		x.name === 'Screenshot' &&
+		typeof x.args !== 'undefined' &&
+		typeof x.args.snapshot !== 'undefined'
+	));
+	traceScreenshots.forEach(function (snap, index) {
+		fs.writeFile(folder + '/' + snap.ts + '.png', snap.args.snapshot, 'base64', function (err) {
+			if (err) {
+				console.log('writeFile error', err);
+			}
+		});
+	});
 }

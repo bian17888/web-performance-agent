@@ -22,16 +22,10 @@ exports.createTask = async (req, res, next) => {
 	// test the website
 	let result = await testWebsite.run(req.body);
 
-	console.log('==========');
-	console.log(result);
-
-	res.send(result);
-
 	// send data with dingding
-	// dingApi.sendToDingTalk(req.body.dingTalk, result, () => {
-	// 	res.send(result);
-	// });
-
+	dingApi.sendToDingTalk(req.body.dingTalk, result, () => {
+		res.send(result);
+	});
 };
 
 /*
